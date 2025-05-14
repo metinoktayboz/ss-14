@@ -10,16 +10,23 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
-    @Value("${jwksUri}")
-    private String jwksUri;
+//    @Value("${jwksUri}")
+//    private String jwksUri;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.oauth2ResourceServer(
-                r -> r.jwt().jwkSetUri(jwksUri)
-                        .jwtAuthenticationConverter(new CustomJwtAuthenticationTokenConverter())
-        );
+//        http.oauth2ResourceServer(
+//                r -> r.jwt().jwkSetUri(jwksUri)
+//                        .jwtAuthenticationConverter(new CustomJwtAuthenticationTokenConverter())
+//        );
+
+        http.oauth2ResourceServer()
+            .opaqueToken()
+            .introspectionUri("http://localhost:8080/oauth2/introspect")
+            .introspectionClientCredentials("client", "secret");
+
         http.authorizeHttpRequests().anyRequest().authenticated();
+
         return http.build();
     }
 }
